@@ -7,6 +7,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"github.com/satori/go.uuid"
 	"time"
+
+	"github.com/kevin51034/login_system/models"
 )
 
 type user struct {
@@ -31,8 +33,9 @@ const sessionAge int = 30
 
 
 func init() {
-	tpl = template.Must(template.ParseGlob("templates/*"))
+	tpl = template.Must(template.ParseGlob("views/*"))
 	dbSessionsCleaned = time.Now()
+	db.Initdb()
 	// generate a test user
 	// bs, _ := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.MinCost)
 	// dbUsers["test@test.com"] = user{"test@test.com", bs, "Chen", "Kevin"}
