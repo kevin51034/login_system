@@ -5,9 +5,11 @@ import (
 	"github.com/satori/go.uuid"
 	"net/http"
 	"time"
+
+	"github.com/kevin51034/login_system/models"
 )
 
-func getUser(w http.ResponseWriter, req *http.Request) user {
+func getUser(w http.ResponseWriter, req *http.Request) models.User {
 	// get cookie
 	c, err := req.Cookie("session")
 	if err != nil {
@@ -21,7 +23,7 @@ func getUser(w http.ResponseWriter, req *http.Request) user {
 	http.SetCookie(w, c)
 
 	// if the user exists already, get user
-	var u user
+	var u models.User
 	if s, ok := dbSessions[c.Value]; ok {
 		s.lastActivity = time.Now()
 		dbSessions[c.Value] = s

@@ -3,21 +3,18 @@ package main
 import (
 	"net/http"
 	"html/template"
-	"log"
+	//"log"
 	"golang.org/x/crypto/bcrypt"
 	"github.com/satori/go.uuid"
 	"time"
 
 	"github.com/kevin51034/login_system/models"
+	"github.com/kevin51034/login_system/controllers"
+
+	"github.com/gin-gonic/gin"
 )
 
-type user struct {
-	UserName string
-	Password []byte
-	First    string
-	Last     string
-	Role     string
-}
+
 
 type session struct {
 	un       string
@@ -26,7 +23,7 @@ type session struct {
 
 // *Template in template package
 var tpl *template.Template
-var dbUsers = map[string]user{}      // map[user ID] user (struct)
+var dbUsers = map[string]models.User{}      // map[user ID] user (struct)
 var dbSessions = map[string]session{} // map[session ID] user ID
 var dbSessionsCleaned time.Time
 const sessionAge int = 30
@@ -35,13 +32,14 @@ const sessionAge int = 30
 func init() {
 	tpl = template.Must(template.ParseGlob("views/*"))
 	dbSessionsCleaned = time.Now()
-	db.Initdb()
+	controllers.Initdb()
 	// generate a test user
 	// bs, _ := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.MinCost)
 	// dbUsers["test@test.com"] = user{"test@test.com", bs, "Chen", "Kevin"}
 }
 
 func main() {
+	/*
 	http.HandleFunc("/", index)
 	http.HandleFunc("/signup", signup)
 	http.HandleFunc("/login", login)
@@ -49,6 +47,17 @@ func main() {
 	http.HandleFunc("/bar", bar)
 	http.Handle("/favicon.ico", http.NotFoundHandler())
 	log.Fatal(http.ListenAndServe(":8080", nil))
+*/
+	// use GIN router
+	router := gin.Default()
+	router.GET("/user/:id", controllers.GetUser)
+	//router.GET("/hello", controllers.GetHello)
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	router.Run()
 }
 
 func index(w http.ResponseWriter, req *http.Request) {
@@ -110,7 +119,7 @@ func signup(w http.ResponseWriter, req *http.Request) {
 			http.Error(w, "Internal server error", http.StatusInternalServerError)
 			return
 		}
-		u := user{un, bs, f, l, r}
+		u := models.User{un, bs, f, l, r}
 		dbUsers[un] = u
 
 		http.Redirect(w, req, "/", http.StatusSeeOther)
