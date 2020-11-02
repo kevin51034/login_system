@@ -4,7 +4,6 @@ import (
 	//"net/http"
 	//"html/template"
 	//"log"
-
 	//"time"
 
 	//"github.com/kevin51034/login_system/models"
@@ -13,28 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
-/*
-type session struct {
-	un       string
-	lastActivity time.Time
-}
-
-// *Template in template package
-var tpl *template.Template
-var dbUsers = map[string]models.User{}      // map[user ID] user (struct)
-var dbSessions = map[string]session{} // map[session ID] user ID
-var dbSessionsCleaned time.Time
-const sessionAge int = 30
-*/
-
 func init() {
-	//tpl = template.Must(template.ParseGlob("views/*"))
-	//dbSessionsCleaned = time.Now()
-	//controllers.Initdb()
-	// generate a test user
-	// bs, _ := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.MinCost)
-	// dbUsers["test@test.com"] = user{"test@test.com", bs, "Chen", "Kevin"}
 }
 
 func main() {
