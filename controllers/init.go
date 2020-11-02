@@ -6,20 +6,32 @@ import (
 	"log"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
+	//"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-var Client *mongo.Client
-
+//var Client *mongo.Client
+/*
 var (
 	db *mongo.Database
 	collection *mongo.Collection
 )
+*/
 
-func Initdb() {
+func Connect() *mongo.Client {
+	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	err = client.Connect(ctx)
+	return client
+}
+
+func connect() *mongo.Database {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
@@ -37,8 +49,7 @@ func Initdb() {
 	}
 	fmt.Println("Successfully connected and pinged.")
 
-	Client = client
-	db = client.Database("login_system_golang")
+	/*db = client.Database("login_system_golang")
 	collection = db.Collection("users")
 
 	cursor, err := collection.Find(ctx, bson.M{})
@@ -46,4 +57,6 @@ func Initdb() {
 		log.Fatal(err)
 	}
 	fmt.Println(cursor)
+	*/
+	return client.Database("login_system_golang")
 }
